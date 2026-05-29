@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: demoSpringAI
+
+  docker:
+    compose:
+      enabled: false
+
+  # --- AI Provider Selection ---
+  # Set via environment variable: AI_PROVIDER=openai or AI_PROVIDER=ollama
+  ai:
+    provider: ${AI_PROVIDER:ollama}
+
+    openai:
+      api-key: ${OPENAI_API_KEY:your-api-key-here}
+      chat:
+        model: ${OPENAI_MODEL:gpt-4o-mini}
+
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        model: ${OLLAMA_MODEL:llama3.2}
+
