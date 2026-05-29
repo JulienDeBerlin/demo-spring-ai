@@ -1,5 +1,6 @@
 package de.gematik.demospringai.adapter.out.ai;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import java.util.Map;
  * Spring injects all ChatModel beans as a Map (bean name → instance).
  * Typical bean names: "openAiChatModel", "ollamaChatModel".
  */
+@Slf4j
 @Configuration
 @EnableConfigurationProperties(AiProperties.class)
 public class ChatModelConfiguration {
@@ -24,6 +26,8 @@ public class ChatModelConfiguration {
 
     @Bean
     public ChatModel activeChatModel(AiProperties aiProperties, Map<String, ChatModel> chatModels) {
+        log.info("AI provider configured: '{}'. Available models: {}", aiProperties.provider(), chatModels.keySet());
+
         String beanName = PROVIDER_TO_BEAN.get(aiProperties.provider());
 
         if (beanName == null) {
@@ -39,6 +43,7 @@ public class ChatModelConfiguration {
                             .formatted(aiProperties.provider(), beanName));
         }
 
+        log.info("Using ChatModel: {} (bean: '{}')", model.getClass().getSimpleName(), beanName);
         return model;
     }
 }
